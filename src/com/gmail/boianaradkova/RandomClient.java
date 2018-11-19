@@ -20,21 +20,16 @@ import java.net.Socket;
  * @author Boyana Kantarska
  */
 public class RandomClient {
-	/**
-	 * Port number of the game server.
-	 */
+	/** Port number of the game server. */
 	static private final int SERVER_PORT = 3379;
 
-	/**
-	 * Host address of the game server.
-	 */
+	/** Host address of the game server. */
 	static private final String SERVER_ADDRESS = "127.0.0.1";
 
 	/**
 	 * Main method.
 	 * 
-	 * @param args
-	 *            Command line parameters.
+	 * @param args Command line parameters.
 	 */
 	public static void main(String[] args) {
 		Socket socket = null;
@@ -52,12 +47,9 @@ public class RandomClient {
 
 		try {
 			in = new DataInputStream(socket.getInputStream());
-			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-					socket.getOutputStream())), true);
+			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 		} catch (IOException ex) {
-			System.err
-					.println("Input/Output streams are not available form the socket: "
-							+ ex.toString());
+			System.err.println("Input/Output streams are not available form the socket: " + ex.toString());
 		}
 
 		String line = "";
@@ -67,43 +59,33 @@ public class RandomClient {
 			int usedColors[] = null;
 			int board[][] = null;
 			try {
+				/* Parsing of the messages in the communication protocol. */
 				line = in.readLine() + " ";
-				M = (new Integer(line.substring(0, line.indexOf(' '))))
-						.intValue();
+				M = (new Integer(line.substring(0, line.indexOf(' ')))).intValue();
 				line = line.substring(line.indexOf(' ') + 1);
-				N = (new Integer(line.substring(0, line.indexOf(' '))))
-						.intValue();
+				N = (new Integer(line.substring(0, line.indexOf(' ')))).intValue();
 				line = line.substring(line.indexOf(' ') + 1);
-				C = (new Integer(line.substring(0, line.indexOf(' '))))
-						.intValue();
+				C = (new Integer(line.substring(0, line.indexOf(' ')))).intValue();
 				line = line.substring(line.indexOf(' ') + 1);
-				P = (new Integer(line.substring(0, line.indexOf(' '))))
-						.intValue();
+				P = (new Integer(line.substring(0, line.indexOf(' ')))).intValue();
 
 				line = in.readLine() + " ";
-				X = (new Integer(line.substring(0, line.indexOf(' '))))
-						.intValue() - 1;
+				X = (new Integer(line.substring(0, line.indexOf(' ')))).intValue() - 1;
 				line = line.substring(line.indexOf(' ') + 1);
-				Y = (new Integer(line.substring(0, line.indexOf(' '))))
-						.intValue() - 1;
+				Y = (new Integer(line.substring(0, line.indexOf(' ')))).intValue() - 1;
 
 				line = in.readLine() + " ";
 				usedColors = new int[P];
 				for (int i = 0; i < P; i++) {
-					usedColors[i] = (new Integer(line.substring(0, line
-							.indexOf(' ')))).intValue();
+					usedColors[i] = (new Integer(line.substring(0, line.indexOf(' ')))).intValue();
 					line = line.substring(line.indexOf(' ') + 1);
 				}
 
-				board = new int[M][];
-				for (int i = 0; i < M; i++) {
-					board[i] = new int[N];
-				}
+				board = new int[M][N];
 				for (int j = 0; j < N; j++) {
 					line = in.readLine() + " ";
 					for (int i = 0; i < M; i++) {
-						board[i][j] = (new Integer(line.substring(0, line
-								.indexOf(' ')))).intValue();
+						board[i][j] = (new Integer(line.substring(0, line.indexOf(' ')))).intValue();
 						line = line.substring(line.indexOf(' ') + 1);
 					}
 				}
@@ -115,9 +97,7 @@ public class RandomClient {
 			boolean done;
 			do {
 				done = true;
-
 				color = 1 + (int) (Math.random() * C);
-
 				for (int i = 0; i < P; i++) {
 					if (color == usedColors[i]) {
 						done = false;
@@ -125,6 +105,7 @@ public class RandomClient {
 				}
 			} while (done == false);
 
+			/* Response from the client to the server. */
 			out.println(color);
 			out.flush();
 		}

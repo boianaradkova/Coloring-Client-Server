@@ -9,6 +9,7 @@ package com.gmail.boianaradkova;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Board with color tiles.
@@ -16,30 +17,20 @@ import java.awt.Graphics;
  * @author Boyana Kantarska
  */
 class Board {
-	/**
-	 * Lock for synchronization.
-	 */
-	private boolean locked;
+	/** Lock for synchronization. */
+	private AtomicBoolean locked = new AtomicBoolean(false);
 
-	/**
-	 * Board width.
-	 */
-	private int columns;
+	/** Board width. */
+	private int columns = -1;
 
-	/**
-	 * Board height.
-	 */
-	private int rows;
+	/** Board height. */
+	private int rows = -1;
 
-	/**
-	 * Number of colors on the board.
-	 */
-	private int numOfColors;
+	/** Number of colors on the board. */
+	private int numOfColors = -1;
 
-	/**
-	 * Grid of the board.
-	 */
-	private int grid[][];
+	/** Grid of the board. */
+	private int grid[][] = {};
 
 	/**
 	 * Recursive flooding with a new color.
@@ -86,17 +77,13 @@ class Board {
 	 * @param numOfColors Number of colors on the board.
 	 */
 	public Board(int columns, int rows, int numOfColors) {
-		locked = false;
+		locked.set(false);
 
 		this.columns = columns;
 		this.rows = rows;
 		this.numOfColors = numOfColors;
 
-		grid = new int[columns][];
-
-		for (int i = 0; i < grid.length; i++) {
-			grid[i] = new int[rows];
-		}
+		grid = new int[columns][rows];
 
 		/* Random colors arrangement. */
 		for (int i = 0; i < columns; i++) {
@@ -112,7 +99,7 @@ class Board {
 	 * @return Width.
 	 */
 	public int getColumns() {
-		return (columns);
+		return columns;
 	}
 
 	/**
@@ -121,7 +108,7 @@ class Board {
 	 * @return Height.
 	 */
 	public int getRows() {
-		return (rows);
+		return rows;
 	}
 
 	/**
@@ -130,7 +117,7 @@ class Board {
 	 * @return Number of colors.
 	 */
 	public int getNumOfColors() {
-		return (numOfColors);
+		return numOfColors;
 	}
 
 	/**
@@ -142,14 +129,17 @@ class Board {
 	 * @return Color.
 	 */
 	public int getColorIndex(int x, int y) {
-		return (grid[x][y]);
+		return grid[x][y];
 	}
 
 	/**
-	 * Convert color index to RGB color value.
+	 * Convert color index from HSV to RGB color value.
+	 * 
+	 * https://en.wikipedia.org/wiki/HSL_and_HSV
 	 * 
 	 * @param x X coordinate of the cell.
 	 * @param y Y coordinate of the cell.
+	 * 
 	 * @return Color object.
 	 */
 	private Color getColor(int x, int y) {
@@ -209,14 +199,17 @@ class Board {
 			break;
 		}
 
-		while (R > 0xFF)
+		while (R > 0xFF) {
 			R >>= 1;
-		while (G > 0xFF)
+		}
+		while (G > 0xFF) {
 			G >>= 1;
-		while (B > 0xFF)
+		}
+		while (B > 0xFF) {
 			B >>= 1;
+		}
 
-		return (new Color(R, G, B));
+		return new Color(R, G, B);
 	}
 
 	/**
@@ -225,7 +218,7 @@ class Board {
 	 * @return True if the board is locked and false if the board is not locked.
 	 */
 	public boolean isLocked() {
-		return (locked);
+		return locked.get();
 	}
 
 	/**
@@ -234,7 +227,7 @@ class Board {
 	 * @param locked State.
 	 */
 	public void setLocked(boolean locked) {
-		this.locked = locked;
+		this.locked.set(locked);
 	}
 
 	/**
@@ -287,9 +280,7 @@ class Board {
 		}
 	}
 
-	/**
-	 * Representing the board as a string.
-	 */
+	/** Representing the board as a string. */
 	public String toString() {
 		String text = "";
 
@@ -307,6 +298,6 @@ class Board {
 			}
 		}
 
-		return (text);
+		return text;
 	}
 }

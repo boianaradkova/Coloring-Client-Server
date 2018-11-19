@@ -19,54 +19,34 @@ import java.net.Socket;
  * @author Boyana Kantarska
  */
 class Player extends Thread {
-	/**
-	 * Connection socket for each player.
-	 */
+	/** Connection socket for each player. */
 	private Socket socket;
 
-	/**
-	 * Input stream.
-	 */
+	/** Input stream. */
 	private BufferedReader in;
 
-	/**
-	 * Output stream.
-	 */
+	/** Output stream. */
 	private PrintWriter out;
 
-	/**
-	 * Handle to the game object.
-	 */
+	/** Handle to the game object. */
 	private GameServer game;
 
-	/**
-	 * Player's name.
-	 */
+	/** Player's name. */
 	private String name;
 
-	/**
-	 * X initial coordinate on the board.
-	 */
+	/** X initial coordinate on the board. */
 	private int x;
 
-	/**
-	 * Y initial coordinate on the board.
-	 */
+	/** Y initial coordinate on the board. */
 	private int y;
 
-	/**
-	 * Current color used.
-	 */
+	/** Current color used. */
 	private int color;
 
-	/**
-	 * Total score of the player.
-	 */
+	/** Total score of the player. */
 	private int score;
 
-	/**
-	 * Player is active until the response is correct.
-	 */
+	/** Player is active until the response is correct. */
 	private boolean active;
 
 	/**
@@ -105,9 +85,7 @@ class Player extends Thread {
 		System.out.println("Player " + name + " initialized ...");
 	}
 
-	/**
-	 * Sets the player not to be active.
-	 */
+	/** Sets the player not to be active. */
 	public void setNotActive() {
 		active = false;
 	}
@@ -118,7 +96,7 @@ class Player extends Thread {
 	 * @return True if the player is active and false if the player is not active.
 	 */
 	public boolean isActive() {
-		return (active);
+		return active;
 	}
 
 	/**
@@ -127,7 +105,7 @@ class Player extends Thread {
 	 * @return X coordinate.
 	 */
 	public int getX() {
-		return (x);
+		return x;
 	}
 
 	/**
@@ -136,7 +114,7 @@ class Player extends Thread {
 	 * @return Y coordinate.
 	 */
 	public int getY() {
-		return (y);
+		return y;
 	}
 
 	/**
@@ -154,7 +132,7 @@ class Player extends Thread {
 	 * @return Color.
 	 */
 	public int getColor() {
-		return (color);
+		return color;
 	}
 
 	/**
@@ -188,7 +166,7 @@ class Player extends Thread {
 			System.err.println("Incorrect data receieved: " + ex.toString());
 		}
 
-		return (color);
+		return color;
 	}
 
 	/**
@@ -201,15 +179,13 @@ class Player extends Thread {
 		out.flush();
 	}
 
-	/**
-	 * Try to make move on each thread loop.
-	 */
+	/** Try to make move on each thread loop. */
 	public void run() {
 		while (true) {
 			game.doTurn(this);
 
 			try {
-				sleep((long) (Math.random()*100));
+				sleep((long) (Math.random() * 100));
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}

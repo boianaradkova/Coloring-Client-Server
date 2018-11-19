@@ -20,59 +20,37 @@ import javax.swing.JFrame;
  * 
  * @author Boyana Kantarska
  */
+@SuppressWarnings("serial")
 public class GameServer extends JFrame {
-	/**
-	 * Serial Version ID is needed because of the JFrame.
-	 */
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Port number for the game server.
-	 */
+	/** Port number for the game server. */
 	private final int SERVER_PORT = 3379;
 
-	/**
-	 * Clients have given seconds to connect.
-	 */
+	/** Clients have given seconds to connect. */
 	private final int CONNECTIONS_TIMEOUT = 5;
 
-	/**
-	 * Each client should response in a given seconds.
-	 */
+	/** Each client should response in a given seconds. */
 	private final int RESPONSE_TIMEOUT = 0;
 
-	/**
-	 * Index of the player on turn.
-	 */
+	/** Index of the player on turn. */
 	private int playingIndex;
 
-	/**
-	 * Game board with lock.
-	 */
+	/** Game board with lock. */
 	private Board board;
 
-	/**
-	 * Holding handle to each player.
-	 */
-	private Vector players;
+	/** Holding handle to each player as thread. */
+	private Vector<Player> players = new Vector<>();
 
-	/**
-	 * Drawing area for the board.
-	 */
+	/** Drawing area for the board. */
 	private DrawingPanel canvas;
 
-	/**
-	 * Order of the players should be random.
-	 */
+	/** Order of the players should be random. */
 	private void shufflePlayers() {
 		Collections.shuffle(players);
 	}
 
-	/**
-	 * Matching the playing player index with the handle.
-	 */
+	/** Matching the playing player index with the handle. */
 	private Player playingNow() {
-		return ((Player) players.elementAt(playingIndex));
+		return players.elementAt(playingIndex);
 	}
 
 	/**
@@ -101,7 +79,7 @@ public class GameServer extends JFrame {
 			break;
 		}
 
-		return (isUsed);
+		return isUsed;
 	}
 
 	/**
@@ -134,22 +112,27 @@ public class GameServer extends JFrame {
 			break;
 		}
 
-		return (isGood);
+		return isGood;
 	}
 
 	/**
 	 * Constructor with parameters.
+	 * 
+	 * @param title Game server title.
 	 */
 	public GameServer(String title) {
 		super(title);
-
-		players = new Vector();
-		board = null;
 
 		canvas = new DrawingPanel(board);
 		this.getContentPane().add(canvas);
 	}
 
+	/**
+	 * Draw visual component.
+	 * 
+	 * @param g Graphic context.
+	 */
+	@Override
 	public void paint(Graphics g) {
 		if (board == null) {
 			return;
@@ -221,7 +204,7 @@ public class GameServer extends JFrame {
 
 		if (player.isActive() == true) {
 			for (int p = 0; p < players.size(); p++) {
-				if (((Player) players.elementAt(p)) == player) {
+				if ((players.elementAt(p)) == player) {
 					playingIndex = p;
 				}
 			}
@@ -252,13 +235,14 @@ public class GameServer extends JFrame {
 	 * Add player to the list of the players.
 	 */
 	public void addPlayer(Player player) {
-		players.add((Object) player);
+		players.add(player);
 	}
 
 	/**
 	 * Presenting game state as string.
 	 */
 	public String toString() {
+		/* Text of the message sent by the server. */
 		String text = "";
 
 		text += board.getColumns() + " " + board.getRows() + " " + board.getNumOfColors() + " " + players.size() + "\n";
@@ -268,29 +252,21 @@ public class GameServer extends JFrame {
 		for (int p = 0; p < players.size(); p++) {
 			text += ((Player) players.elementAt(p)).getColor();
 
-			if (p == players.size() - 1) {
-				text = text;
-			} else {
+			if (p != players.size() - 1) {
 				text += " ";
 			}
 		}
 		text += "\n";
-
 		text += board + "\n";
 
-		return (text);
+		return text;
 	}
 
-	/**
-	 * Wait players to connect.
-	 */
+	/** Wait players to connect. */
 	public void host() {
-		long startTime;
-
-		startTime = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 
 		try {
-			Socket client;
 			ServerSocket server = new ServerSocket(SERVER_PORT);
 			server.setSoTimeout(CONNECTIONS_TIMEOUT * 1000);
 
@@ -298,7 +274,7 @@ public class GameServer extends JFrame {
 			System.out.println("Server will wait for clients to connect " + CONNECTIONS_TIMEOUT + " seconds ...");
 
 			do {
-				client = null;
+				Socket client = null;
 
 				try {
 					client = server.accept();
@@ -308,7 +284,7 @@ public class GameServer extends JFrame {
 				if (client != null) {
 					addPlayer(new Player("" + System.currentTimeMillis(), client, this));
 				}
-			} while ((System.currentTimeMillis() - startTime) < CONNECTIONS_TIMEOUT * 1000);
+			} while ((System.currentTimeMillis() - start) < CONNECTIONS_TIMEOUT * 1000);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

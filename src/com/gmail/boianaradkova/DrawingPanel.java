@@ -16,15 +16,10 @@ import javax.swing.JPanel;
  * 
  * @author Boyana Kantarska
  */
+@SuppressWarnings("serial")
 class DrawingPanel extends JPanel {
-	/**
-	 * Serial Version ID is needed because of the JPanel.
-	 */
-	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Handle to the board which should be drawn.
-	 */
+	/** Handle to the board which should be drawn. */
 	private Board board;
 
 	/**
@@ -38,11 +33,12 @@ class DrawingPanel extends JPanel {
 
 	/**
 	 * Control paint method.
+	 * 
+	 * @param g Graphic context.
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
-		board.draw(g, this.getWidth(), this.getHeight());
+		board.draw(g, getWidth(), getHeight());
 	}
 
 	/**
