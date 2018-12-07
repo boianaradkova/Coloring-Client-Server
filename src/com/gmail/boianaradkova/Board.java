@@ -94,6 +94,25 @@ class Board {
 	}
 
 	/**
+	 * Constructor.
+	 * 
+	 * @param columns     Board width.
+	 * @param rows        Board height.
+	 * @param numOfColors Number of colors on the board.
+	 * @param grid        Board state.
+	 */
+	public Board(int columns, int rows, int numOfColors, int[][] grid) {
+		this(columns, rows, numOfColors);
+
+		/* Random colors arrangement. */
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				this.grid[i][j] = grid[i][j];
+			}
+		}
+	}
+
+	/**
 	 * Board width.
 	 * 
 	 * @return Width.

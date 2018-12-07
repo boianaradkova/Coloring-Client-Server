@@ -16,4 +16,6 @@ rem start java.exe -classpath . com.gmail.boianaradkova.RandomClient 3379 localh
 
 rem start java.exe -classpath . com.gmail.boianaradkova.RandomClient 3379 localhost
 
+cd ..
+
 pause
