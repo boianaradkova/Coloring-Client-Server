@@ -23,19 +23,19 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class GameServer extends JFrame {
 	/** Port number for the game server. */
-	private final int SERVER_PORT = 3379;
+	static private int port = -1;
 
 	/** Clients have given seconds to connect. */
-	private final int CONNECTIONS_TIMEOUT = 5;
+	static private int connectionTimeout = -1;
 
 	/** Each client should response in a given seconds. */
-	private final int RESPONSE_TIMEOUT = 0;
+	static private int responseTimeout = -1;
 
 	/** Index of the player on turn. */
-	private int playingIndex;
+	private int playingIndex = -1;
 
 	/** Game board with lock. */
-	private Board board;
+	private Board board = null;
 
 	/** Holding handle to each player as thread. */
 	private Vector<Player> players = new Vector<>();
@@ -213,7 +213,7 @@ public class GameServer extends JFrame {
 			player.write(this.toString());
 
 			/* Player's move is received via TCP socket. */
-			int color = player.read(RESPONSE_TIMEOUT);
+			int color = player.read(responseTimeout);
 
 			/* Player answer should be valid. */
 			if (color < 1 || color > board.getNumOfColors() || isColorUsed(playingIndex, color) == true)
@@ -267,11 +267,11 @@ public class GameServer extends JFrame {
 		long start = System.currentTimeMillis();
 
 		try {
-			ServerSocket server = new ServerSocket(SERVER_PORT);
-			server.setSoTimeout(CONNECTIONS_TIMEOUT * 1000);
+			ServerSocket server = new ServerSocket(port);
+			server.setSoTimeout(connectionTimeout * 1000);
 
-			System.out.println("Server started on port " + SERVER_PORT + " ...");
-			System.out.println("Server will wait for clients to connect " + CONNECTIONS_TIMEOUT + " seconds ...");
+			System.out.println("Server started on port " + port + " ...");
+			System.out.println("Server will wait for clients to connect " + connectionTimeout + " seconds ...");
 
 			do {
 				Socket client = null;
@@ -284,7 +284,7 @@ public class GameServer extends JFrame {
 				if (client != null) {
 					addPlayer(new Player("" + System.currentTimeMillis(), client, this));
 				}
-			} while ((System.currentTimeMillis() - start) < CONNECTIONS_TIMEOUT * 1000);
+			} while ((System.currentTimeMillis() - start) < connectionTimeout * 1000);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -298,6 +298,10 @@ public class GameServer extends JFrame {
 	 * @param args Command line parameters.
 	 */
 	public static void main(String args[]) {
+		port = Integer.valueOf(args[0]);
+		connectionTimeout = Integer.valueOf(args[1]);
+		responseTimeout = Integer.valueOf(args[2]);
+
 		GameServer game = new GameServer("Game Server ...");
 
 		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -20,12 +20,6 @@ import java.net.Socket;
  * @author Boyana Kantarska
  */
 public class RandomClient {
-	/** Port number of the game server. */
-	static private final int SERVER_PORT = 3379;
-
-	/** Host address of the game server. */
-	static private final String SERVER_ADDRESS = "127.0.0.1";
-
 	/**
 	 * Main method.
 	 * 
@@ -36,9 +30,12 @@ public class RandomClient {
 		DataInputStream in = null;
 		PrintWriter out = null;
 
+		int port = Integer.valueOf(args[0]);
+		String address = "" + args[1];
+
 		do {
 			try {
-				socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+				socket = new Socket(address, port);
 			} catch (Exception ex) {
 				socket = null;
 			}
