@@ -138,7 +138,7 @@ public class GameServer extends JFrame {
 			return;
 		}
 
-		board.draw(g, this.getWidth(), this.getHeight());
+		// board.draw(g, this.getWidth(), this.getHeight());
 	}
 
 	/**
@@ -225,6 +225,7 @@ public class GameServer extends JFrame {
 		}
 
 		canvas.repaint();
+		System.out.println( this.toString() );
 
 		/* Unlock and notify the others. */
 		board.setLocked(false);
@@ -306,7 +307,7 @@ public class GameServer extends JFrame {
 
 		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		game.setSize(800, 600);
-		game.setVisible(true);
+		// game.setVisible(true);
 
 		game.host();
 		game.init();
