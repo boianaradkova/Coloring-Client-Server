@@ -150,7 +150,7 @@ public class GameServer extends JFrame {
 
 		int x, y;
 
-		/* Choosing rondom number of colors. */
+		/* Choosing rаndom number of colors. */
 		int numOfColors = (players.size() + 1) + (int) (Math.random() * 4 * players.size() - 1);
 
 		/* Choosing random dimensions of the board. */

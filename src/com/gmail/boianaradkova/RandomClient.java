@@ -54,7 +54,11 @@ public class RandomClient extends JFrame {
 
 		this.port = port;
 		this.address = address;
-
+/**
+ * This constructo call and create whit "super"
+ * port and address to the Server.
+ * 
+ */
 		do {
 			try {
 				socket = new Socket(address, port);
@@ -71,9 +75,24 @@ public class RandomClient extends JFrame {
 			System.err.println("Input/Output streams are not available form the socket: " + ex.toString());
 		}
 		
+		/**
+		 * Loop "do" run the Constructor whit "Socket port and network address".
+		 * By checking for exceptions and errors in the code, returns the socket blank.
+		 * If the reason for exception isn't dropped, code execution continues with 
+		 * an "while" loop until connection is established.
+		 * 
+		 */
+		
 		/* Communication done in a separate thread. */
 		Thread thread = new Thread() {
 			@Override
+			
+			/**
+			 *The function allows to start the new thread with 
+			 *next run() method.
+			 * 
+			 */
+			
 			public void run() {
 				String line = "";
 				while (line != null) {
@@ -81,6 +100,16 @@ public class RandomClient extends JFrame {
 					int X = 0, Y = 0;
 					int usedColors[] = null;
 					int board[][] = null;
+					
+					/**
+					 * Enter an empty string that enters in "while" loop.
+					 * Declares the coordinates: M , N , C , P , X , Y and  
+					 * arrays : usedColors[] (sets the use of colors) and
+					 * board[][](two-dimensional array, sets the coordinates
+					 * of the individual customer's board.
+					 * 
+					 */
+					
 					try {
 						/* Parsing of the messages in the communication protocol. */
 						line = in.readLine() + " ";
@@ -98,13 +127,27 @@ public class RandomClient extends JFrame {
 						line = line.substring(line.indexOf(' ') + 1);
 						Y = (new Integer(line.substring(0, line.indexOf(' ')))).intValue() - 1;
 
+						/**
+						 * "try" block sets the beginning of the graphic drawing through the defined 
+						 * coordinates and methods:
+						 * readLine- draws according to its set values and transfers to the next line.
+						 * subString- starts at its first index and ends at its predetermined.
+						 * indexOf-returns the index from the first string to the last symbol by 
+						 * setting whit intValues.
+						 * 
+						 */
+						
 						line = in.readLine() + " ";
 						usedColors = new int[P];
 						for (int i = 0; i < P; i++) {
 							usedColors[i] = (new Integer(line.substring(0, line.indexOf(' ')))).intValue();
 							line = line.substring(line.indexOf(' ') + 1);
 						}
-
+							
+						/**
+						 * Color and graphic drawing are set.
+						 */
+						
 						board = new int[M][N];
 						for (int j = 0; j < N; j++) {
 							line = in.readLine() + " ";
@@ -114,12 +157,24 @@ public class RandomClient extends JFrame {
 							}
 						}
 						
+						/**
+						 * In "for" loop the colors and frame for the player are predetermined.
+						 * 		
+						 */
+						
 						/* Board creation. */
 						RandomClient.this.board = new Board(M, N, C, board);
 					} catch (IOException ex) {
 						System.err.println("Incorrect imput data: " + ex.toString());
 					}
 
+					/**
+					 * The exception checks for failures of failed or interrupted operations.
+					 * When a problem occurs, a message is printed and returns a string of 
+					 * text information with a correct prefix to the problem.
+					 * 
+					 */
+					
 					int color = 0;
 					boolean done;
 					do {
@@ -131,13 +186,24 @@ public class RandomClient extends JFrame {
 							}
 						}
 					} while (done == false);
+					
+					/**
+					 *In addition to the exception check, a variable is entered- "color" 
+					 *of an integer type of data that serves as a comparison by the primitive
+					 *type "boolean". Its function is to return the argument to the object.
+					 * 
+					 */
 
 					/* Response from the client to the server. */
-					out.println(color);
-					out.flush();
+					out.println(color); /* Closing the flow for color printing. */
+					out.flush(); /* Close the buffer entry. */
 					
 					/* Redraw GUI. */
 					repaint();
+					/**
+					 * A method that controls the update through a cycle retrieves
+					 * the repainting components. 
+					 */
 					
 					try {
 						Thread.sleep(100);
@@ -146,7 +212,7 @@ public class RandomClient extends JFrame {
 				}
 			}
 		};
-		thread.start();
+		thread.start(); /* Thread Execution Method. */
 	}
 
 	/**
@@ -154,7 +220,7 @@ public class RandomClient extends JFrame {
 	 * 
 	 * @param g Graphic context.
 	 */
-	@Override
+	@Override /* Function allowing the drawing method to be executed. */
 	public void paint(Graphics g) {
 		if (board == null) {
 			return;
@@ -162,6 +228,12 @@ public class RandomClient extends JFrame {
 
 		board.draw(g, this.getWidth(), this.getHeight());
 	}
+	
+	/**
+	 * The condition "if" verifies whether the board is initialized.
+	 * If not, it takes the current objects to determine the size and length and height.
+	 * 
+	 */
 
 	/** Finalize internal state of the objects. */
 	@Override
@@ -176,6 +248,11 @@ public class RandomClient extends JFrame {
 		} catch (IOException ex) {
 		}
 	}
+	
+	/**
+	 * The method collects excess garbage, which is out of control of the developer.
+	 * Closes the stream by checking again for exceptions and errors.
+	 */
 
 	/**
 	 * Main method.
