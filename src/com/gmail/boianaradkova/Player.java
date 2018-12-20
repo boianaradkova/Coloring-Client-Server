@@ -179,7 +179,12 @@ class Player extends Thread {
 		out.flush();
 	}
 
-	/** Try to make move on each thread loop. */
+	/** Try to make move on each thread loop. 
+	 * The thread is started fulfilling the "true " condition the game is working.
+	 * The thread falls asleep by returning a number between 0 and 10 during this time.
+	 * Exception Capture Condition, which transmit directly about the error.
+	 * 
+	 */
 	public void run() {
 		while (true) {
 			game.doTurn(this);
