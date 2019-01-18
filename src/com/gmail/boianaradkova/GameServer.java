@@ -30,7 +30,7 @@ public class GameServer extends JFrame {
 
 	/** Each client should response in a given seconds. */
 	static private int responseTimeout = -1;
-
+	
 	/** Index of the player on turn. */
 	private int playingIndex = -1;
 
